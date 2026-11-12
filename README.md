@@ -1,3 +1,7 @@
+> **OpenPigeonBot (OPB)** — StephenFeng's downstream build of OpenMausBot, shown as **PigeonBot** in the app.
+> Fork notes, compatibility contract and build steps: [OPB.md](OPB.md). Not affiliated with the OpenMausBot maintainers or xAI.
+> Everything below is the upstream README.
+
 <div align="center">
 
 # OpenMausBot

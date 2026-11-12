@@ -25,3 +25,9 @@ name, a type, an extracted function, one shared helper. A rule ("never X",
 rule that guards correctness; fix the code.
 
 More specific `AGENTS.md` files override this note within their directories.
+
+## OpenPigeonBot fork
+
+This checkout is OpenPigeonBot (OPB), a downstream fork. Read [`OPB.md`](OPB.md)
+before changing names, identifiers, build or release settings: the
+compatibility contract there keeps the official clients working.
