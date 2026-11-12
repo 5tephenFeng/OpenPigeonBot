@@ -101,5 +101,5 @@ test("a new language redraws main's menu, both trays, the window title and the b
   assert.deepEqual(calls, [["menu", "Servidor"], ["title", "OpenMausBot — Hospedado: Office (office.example.test)"], ["badge", "Nenhuma conversa não lida"]]);
   assert.deepEqual(said(trays[0]), ["Abrir o OpenMaus Bot", "Sair do OpenMaus Bot"]);
   assert.deepEqual(said(trays[1]), ["My Cloud com acesso a este PC", "Pausar", "Permitir que os Clouds executem comandos neste PC", "Ver atividade"]);
-  assert.equal(trays[1].tip, "OpenMausBot: My Cloud com acesso a este PC");
+  assert.equal(trays[1].tip, "OpenPigeonBot: My Cloud com acesso a este PC");
 });
