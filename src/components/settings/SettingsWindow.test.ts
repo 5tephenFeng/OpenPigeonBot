@@ -72,9 +72,9 @@ describe("the Settings window", () => {
   it("says which place a place page changes, and that account and app pages stay the same, without “place” for a person with one place", () => {
     expect(render("phone")).toContain("This computer");
     const account = render("account");
-    expect(account).toContain("Your MausBot account");
+    expect(account).toContain("Your PigeonBot account");
     expect(account).not.toContain("Same on every place");
-    expect(render("appearance")).toContain("MausBot on this device");
+    expect(render("appearance")).toContain("PigeonBot on this device");
   });
 
   // Owner decision (Nov 11): Simple's nav is shorter. Eight entries, the same for every person and every rail.
