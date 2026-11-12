@@ -3,10 +3,11 @@
   "private": true,
   "version": "0.1.154",
   "description": "A local-first chat app for running a team of AI agents.",
-  "homepage": "https://github.com/milind-soni/OpenMausBot",
+  "productName": "OpenPigeonBot",
+  "homepage": "https://github.com/5tephenFeng/OpenPigeonBot",
   "repository": {
     "type": "git",
-    "url": "https://github.com/milind-soni/OpenMausBot.git"
+    "url": "https://github.com/5tephenFeng/OpenPigeonBot.git"
   },
   "author": {
     "name": "Milind Soni",
