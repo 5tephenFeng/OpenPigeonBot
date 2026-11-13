@@ -4,6 +4,14 @@
 
 ## 2026-11-13
 
+- 上游同步（整合分支 `opb/sync-2026-11-13`，DeviceManager 任务 `TASK-20261113-task-dbf64b0a`，用户原话授权「同意在 sts-mbp 建整合分支一次合入上游（含 TS7），加 OPB 修正提交，先在 sts-mbp 构建验证，不部署」）：
+  - 从 `opb/docs` 切出，`git merge --no-ff` 合入上游 `ee89b889c97f208231e22957ca36e5896f1329a1`（#5640），相对 fork `main`（`2d74ba961`）425 个提交、约 125 个 PR，含 TypeScript 5.8 → 7.0.2。合并提交 `7bca3e742`。
+  - 唯一冲突 `electron/lending-indicator.mjs`（上游 #5623 托盘 tooltip）：取上游新代码，保留 `OpenPigeonBot:` 前缀。
+  - OPB 修正提交：`78a9d0146`（服务端 `PRODUCT_NAME` → PigeonBot，CLI 配对 / phone-secret / adb 报错里的桌面 App 名 → OpenPigeonBot；`DEFAULT_BRAND`、`/api/brand` 默认值、`/api/health` 不变）、`6814d91ca`（托盘 tooltip 与启动窗口标题 → OpenPigeonBot）、`c1bfe1b35`（lend-automatically、PairPage、web-app-assets 测试期望改为 OPB 名）。
+  - 接口只有新增（7 个 API、云电脑恢复路由、`OMB_FISH_LIVE_*`、`OMB_CLOUD_COMPUTER_AUTO_REPLACE`、若干可选配置键），合同内已有部分未改。
+  - sts-mbp 验证：typecheck（tsc 7.0.2）、lint、i18n:check 通过；test:electron 2063 项 2050 通过 0 失败 13 跳过；重点 vitest 9 文件 96 项通过；全量 vitest 本轮未跑。
+  - `-c.mac.identity="-"` ad-hoc 打包成功：主程序 `Identifier=com.stephenfeng.openpigeonbot`、`flags=adhoc,runtime`，`codesign --verify --deep --strict` 通过，未用 `codesign --deep`；`spctl` rejected（未公证）。包内服务冒烟：`/api/health` `app:"openmausbot"`，`/api/brand` 默认 `OpenMausBot`。
+  - 未部署到 sts-mac，未合并进 `main` / `opb/branding` / `opb/docs`。详见 `docs/opb/design/2026-11-13-upstream-sync.md`。
 - 在 sts-mac 部署 OPB 0.1.154。DeviceManager 任务 `TASK-20261113-task-f1028a6e`，发布 `1d4a6a9`，操作记录 `OP-20261113-result-4fadc16bac81`。
 - 部署后 `/api/health` 正常。引擎登录和实际对话未验证。
 - 安装与运行要点（详见 `docs/opb/design/2026-11-13-sts-mac-deployment.md`）：安装路径为 `/Applications/OpenPigeonBot.app`；数据目录 `~/.openmausbot`；只监听 `127.0.0.1:8799` / `127.0.0.1:8800`（8810 / 8811 未监听）；当时用 `-c.mac.identity=null` 构建，未公证，构建刚结束时 Identifier=`Electron`，在 `~/.local/opb-stage` 上执行 `codesign --deep --force --sign -` 后 Identifier 变为 `com.stephenfeng.openpigeonbot`（`Signature=adhoc`，`TeamIdentifier=not set`），`spctl --assess` 仍拒绝，去隔离后可以启动。去隔离的完整 `xattr` 命令行在证据中未留下，仍待确认。

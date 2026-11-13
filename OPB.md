@@ -15,6 +15,7 @@ OpenPigeonBot（以下简称 OPB）是 StephenFeng 基于
 | `main` | 镜像 `upstream/main`；不要在这里提交 OPB 改动。当前对齐的上游提交是 `2d74ba9616270b4a1df1ebfa4a912b55bd5cb4ea`（2026-11-12） |
 | `opb/branding` | OPB 品牌化及 fork 专用改动，相对 `main` 变基或合并 |
 | `opb/docs` | 本次文档补齐分支，从 `opb/branding` 切出，首个提交 `311b3513a`。不要合并进 `main` |
+| `opb/sync-2026-11-13` | 2026-11-13 上游整合分支：从 `opb/docs` 切出，`--no-ff` 合入上游 `ee89b889c`，再加 OPB 修正提交。已在 sts-mbp 构建验证，未部署、未合并进其他分支。见 `docs/opb/design/2026-11-13-upstream-sync.md` |
 
 同步：`git fetch upstream && git checkout main && git merge --ff-only upstream/main && git push origin main`，
 然后把 `opb/*` 分支跟上 `main`，并重跑下文的检查。
@@ -56,7 +57,7 @@ OPB 必须能与官方 iOS、Android 和桌面客户端一起工作。下列内�
 
 **接口未动。** 上述 66 个文件里没有服务端路由、配对协议、数据库 schema 或数据目录的改动；`server/brand.ts` 与 `server/routes/status.ts` 均未修改，因此 `/api/brand` 的默认 `brand.name` 仍是 `"OpenMausBot"`，`/api/health` 仍返回 `app: "openmausbot"`。
 
-**Move from Grok Bot 已在当前树中**（不是必须先合并上游积压才能用）：实现位于 `shared/grok-import.ts`、`server/grok-local.ts`、`src/components/GrokMoveDialog.tsx`、`GrokMovePopup.tsx`、`src/lib/grok-move.ts`、`src/components/ImportSettings.tsx`，说明见 `docs/team-sharing.md`。手动入口是 Settings → Import → Move from Grok Bot，没有用品牌常量隐藏。首次自动提示（`GROK_MOVE_NOTICE`）会避开 Team Cloud、托管成员、`brandStatus().source === "file"` 的白标构建，以及组织桌面；当前 OPB 默认仍是 `source: "default"`，按代码不会仅仅因为改了显示名就关掉该提示。导入是本地、离线解析，不登录 Grok 云。试迁移顺序见 `docs/opb/HANDOFF.md`。
+**Move from Grok Bot 已在当前树中**（不是必须先合并上游积压才能用）：实现位于 `shared/grok-import.ts`、`server/grok-local.ts`、`src/components/GrokMoveDialog.tsx`、`GrokMovePopup.tsx`、`src/lib/grok-move.ts`、`src/components/ImportSettings.tsx`，说明见 `docs/team-sharing.md`。手动入口是 Settings → Import → Move from Grok Bot，没有用品牌常量隐藏。合入上游 #5613 之后（`opb/sync-2026-11-13` 起），入口改为「设置 → 导入与导出 → Move from Grok Bot」（英文 Settings → Import & export），简单与高级模式都可见。首次自动提示（`GROK_MOVE_NOTICE`）会避开 Team Cloud、托管成员、`brandStatus().source === "file"` 的白标构建，以及组织桌面；当前 OPB 默认仍是 `source: "default"`，按代码不会仅仅因为改了显示名就关掉该提示。导入是本地、离线解析，不登录 Grok 云。试迁移顺序见 `docs/opb/HANDOFF.md`。
 
 尚未改、需用户决定的事项（locale 字样、图标、暂存清理等）列在 `docs/opb/HANDOFF.md`，不在本次已完成范围内。
 

@@ -11,11 +11,13 @@
 - 已在 sts-mac 部署 0.1.154。任务 `TASK-20261113-task-f1028a6e`，DeviceManager 发布 `1d4a6a9`，操作记录 `OP-20261113-result-4fadc16bac81`。应用路径为 `/Applications/OpenPigeonBot.app`（`CFBundleIdentifier`=`com.stephenfeng.openpigeonbot`，版本 0.1.154）。数据目录 `~/.openmausbot`。当前监听 `127.0.0.1:8799` / `127.0.0.1:8800`（进程 OpenPigeonBot，pid 41342，核对于 2026-11-13 11:44 Asia/Shanghai）；8810 / 8811 未监听。`/api/health` 正文见部署文档，`app` 为 `openmausbot`。`/api/brand` 为 `source: "default"`，`brand.name` 为 `OpenMausBot`。构建使用 `-c.mac.identity=null`；暂存副本上 `codesign --deep --force --sign -` 之后，已安装包的 Identifier 已是 `com.stephenfeng.openpigeonbot`（`Signature=adhoc`，`TeamIdentifier=not set`），不再是 `Electron`。当前应用包没有 `com.apple.quarantine`，仅有 `com.apple.provenance`。开机自启、主机控制、FDA 未做（用户与系统 LaunchAgents 中无 OPB 相关项）。引擎登录和实际对话未验证。签名修正方案已写成设计稿，尚未实施。
 - Move from Grok Bot **已在当前 `opb/branding` 树中**，不必先合并上游 338 个积压提交才能试用。
 - 已在 `opb/docs` 写入文档（首个提交 `311b3513a`），含源码核实和 2026-11-13 现场只读核对。
+- 2026-11-13 上游同步：整合分支 `opb/sync-2026-11-13` 已合入上游 `ee89b889c`（相对 fork `main` 425 个提交，含 TypeScript 7），并加 OPB 修正提交；已在 sts-mbp 构建验证，**未部署**，未合并进 `main` / `opb/branding` / `opb/docs`。任务 `TASK-20261113-task-dbf64b0a`，详见 `docs/opb/design/2026-11-13-upstream-sync.md`。
 
 ## 进行中的分支
 
 - `opb/branding`：已推送的品牌化分支，尖端 `0ec29a9fb`。
 - `opb/docs`：本次文档补齐分支，从 `opb/branding`（`0ec29a9fb`）切出，首个提交 `311b3513a`。不要合并进 `main`。
+- `opb/sync-2026-11-13`：上游整合分支（从 `opb/docs` 切出）。部署到 sts-mac 前须用户明确同意；是否让它成为新的 OPB 主线（取代 `opb/branding`）待用户决定。
 
 不要在 `main` 上直接提交 OPB 改动。
 
@@ -27,9 +29,9 @@
 - 验证引擎登录和实际对话。
 - Tailscale 访问由中枢跟进。策略是远程只走应用内的 Tailscale；开通是否完成待确认。
 - 上游积压：2026-11-13 11:44（Asia/Shanghai）再次核对，`milind-soni/OpenMausBot` 的 `main` 仍比 fork 的 `main` 超前 338 个提交，尖端仍为 `f509c24bb`（完整 SHA：`f509c24bbbc92406f22bc1338e35c00e53e31025`，提交时间为 2026-11-13 03:28:10 Asia/Shanghai）。不要擅自合并。Move from Grok Bot 本身已在当前树中，不要把这 338 个提交当成启用该功能的前置；合并时再看上游后续对 Import 页的改动。
-- 助手迁移：先用一个不重要的助手试导入。手动入口是 Settings → Import → Move from Grok Bot（未被品牌常量隐藏）。自动提示（`GROK_MOVE_NOTICE`）在 `brandStatus().source === "file"`、Team Cloud、托管成员或组织桌面时不会出现；当前默认 `source: "default"`，按代码仍可能弹出。导入完成后：先在原 Grok Bot 中关闭定时 Routine，再在 OPB 中启用对应 Routine；事件触发类从该 bot 的 `memory/grok-bot-event-routines.md` 核对并重绑。不要一次迁入全部「中枢、拾遗、生活」等助手。
+- 助手迁移：先用一个不重要的助手试导入。手动入口是 Settings → Import → Move from Grok Bot（未被品牌常量隐藏）；在 `opb/sync-2026-11-13` 及之后为「设置 → 导入与导出 → Move from Grok Bot」（上游 #5613）。自动提示（`GROK_MOVE_NOTICE`）在 `brandStatus().source === "file"`、Team Cloud、托管成员或组织桌面时不会出现；当前默认 `source: "default"`，按代码仍可能弹出。导入完成后：先在原 Grok Bot 中关闭定时 Routine，再在 OPB 中启用对应 Routine；事件触发类从该 bot 的 `memory/grok-bot-event-routines.md` 核对并重绑。不要一次迁入全部「中枢、拾遗、生活」等助手。
 - 排查仍直接读取 `brand().name` 做界面展示的调用点（`productName()` 在 `source !== "file"` 时已保持 PigeonBot，但 `applyBrand()` 会把 `brand().name` 换成服务端的 OpenMausBot）。
-- 补改 `electron/system-tray.mjs` 里仍为 `"OpenMaus Bot"` 的托盘 tooltip（品牌化漏改）。
+- 补改 `electron/system-tray.mjs` 里仍为 `"OpenMaus Bot"` 的托盘 tooltip（品牌化漏改）。已在 `opb/sync-2026-11-13` 修正（连同启动窗口标题）；`opb/branding` 上仍是旧值。
 - 文档已在 `opb/docs` 提交（首个提交 `311b3513a`）；推送后把 GitHub 链接补进交接。不要直接写 `main`。
 
 ## 待用户决定
@@ -39,11 +41,16 @@
 - 是否建立 Gitee 私有镜像。
 - 是否清理 sts-mbp 上的 `~/.local/opb-transfer`（2026-11-13 现场 `du -sh` 为 729M）和 sts-mac 上的 `~/.local/opb-stage`（现场 773M，内含 `OpenPigeonBot.app`，确是当时部署暂存副本）。这两项是运维清理，须用户授权后再做，不要自行删除。
 - 数据目录保持 `~/.openmausbot`（合同已如此要求；若将来要改，必须先由用户评估）。
+- 上游同步（`opb/sync-2026-11-13`）带进的新功能是否在 OPB 中启用或隐藏：USB 手机接管（`features.usbPhoneTakeover`，默认关；开启后从 GitHub 下载 scrcpy-server，需要 adb）、Fish Audio 通话（外部服务，新依赖 `@fishaudio/agent-client`）、OMP 引擎（ACP）、云电脑自动替换（`features.cloudComputerAutoReplace`，默认关）。
+- 行为变化：手机可接管共享本机 VM，人工接管时该桌面上所有 bot 会暂停。是否接受或关闭。
+- `@devs` bug 报告默认发往上游 MausBot 团队的 Cloud 端点（`server/devs-report*.ts`），OPB 是否保留、关闭或改指向。
+- 权限面告知：新增 7 个 API（`/api/usb-phones`、`/api/live/relay`、`/api/logins/1password/items`、`/api/internal/cloud-computer/reset`、`/api/internal/post-to-thread`、`/api/groups/order`、附件 `?media=`）及云电脑恢复路由；1Password 改为可按条目授权。
+- 是否把 `opb/sync-2026-11-13` 部署到 sts-mac（替换 `/Applications/OpenPigeonBot.app` 须明确同意），以及之后是否让它成为新的 OPB 主线。
 
 ## 已知问题
 
 - 未公证；0.1.154 构建刚结束时 Identifier=`Electron`；当时用 `codesign --deep --force --sign -` 补救后，已安装包 Identifier 已是 `com.stephenfeng.openpigeonbot`，但 `--deep` 仍可能覆盖 Helper 的 entitlements。`spctl` 仍拒绝，去掉隔离属性后可以启动。后续不应再使用 `--deep`。去隔离的完整 `xattr` 命令行未在证据中找到。
-- `electron/system-tray.mjs` 第 23 行托盘 tooltip 仍是 `"OpenMaus Bot"`。
+- `electron/system-tray.mjs` 第 23 行托盘 tooltip 在 `opb/branding` / `opb/docs` 上仍是 `"OpenMaus Bot"`（`opb/sync-2026-11-13` 已修）。
 - 前端测试 7 个失败（见上，与上游在 macOS 上的表现一致，据 2026-11-12 记录）。
 - 全量 vitest 尚未跑完，因此还有未覆盖的测试风险。
 - 引擎登录与对话未验证，还不能把 sts-mac 部署视为功能已验收。
