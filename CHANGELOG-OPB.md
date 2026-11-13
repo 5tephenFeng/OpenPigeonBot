@@ -10,7 +10,7 @@
 - 对照 electron-builder 26.15.3 源码和当前树核实后，把签名修正方案写入 `docs/opb/design/2026-11-13-signing-fix.md`（状态：未实施）：改用 `-c.mac.identity="-"`，保留 entitlements 中已有的 `disable-library-validation` 与 `allow-jit`，不再使用 `codesign --deep`，去隔离改用 `xattr`，先修签名再授 FDA / 辅助功能。验收标为待在 sts-mbp 上实测。
 - 核实 Move from Grok Bot 已在当前 `opb/branding` 树中；手动入口与自动提示条件已记入 `OPB.md` 和 `HANDOFF.md`。#5125 只是 Settings 里的版式修复，不是该功能的引入提交。
 - 2026-11-13 11:44（Asia/Shanghai）在 sts-mac / sts-mbp 上只读核对了安装路径、签名、端口、`/api/health` 与 `/api/brand` 正文、暂存目录体积，以及上游仍为 `f509c24bb`、相对 `2d74ba961` 超前 338。结果已写入上述文档。
-- 文档补齐（提交号待定）：修订 `OPB.md`，新增并更新 `CHANGELOG-OPB.md`、`docs/opb/HANDOFF.md`、`docs/opb/design/2026-11-12-branding.md`、`docs/opb/design/2026-11-13-sts-mac-deployment.md`、`docs/opb/design/2026-11-13-signing-fix.md`。计划放在 `opb/docs` 分支。
+- 文档补齐（`opb/docs` 首个提交 `311b3513a`，完整 SHA：`311b3513a3b7a45904183ba853e4f43869da3acf`）：修订 `OPB.md`，新增并更新 `CHANGELOG-OPB.md`、`docs/opb/HANDOFF.md`、`docs/opb/design/2026-11-12-branding.md`、`docs/opb/design/2026-11-13-sts-mac-deployment.md`、`docs/opb/design/2026-11-13-signing-fix.md`。本条 SHA 由本分支第二个提交回填。
 
 ## 2026-11-12
 

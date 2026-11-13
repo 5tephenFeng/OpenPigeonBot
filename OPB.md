@@ -14,7 +14,7 @@ OpenPigeonBot（以下简称 OPB）是 StephenFeng 基于
 | `upstream` | `https://github.com/milind-soni/OpenMausBot` |
 | `main` | 镜像 `upstream/main`；不要在这里提交 OPB 改动。当前对齐的上游提交是 `2d74ba9616270b4a1df1ebfa4a912b55bd5cb4ea`（2026-11-12） |
 | `opb/branding` | OPB 品牌化及 fork 专用改动，相对 `main` 变基或合并 |
-| `opb/docs` | 计划中的文档补齐分支（草稿阶段，仓库里尚不存在） |
+| `opb/docs` | 本次文档补齐分支，从 `opb/branding` 切出，首个提交 `311b3513a`。不要合并进 `main` |
 
 同步：`git fetch upstream && git checkout main && git merge --ff-only upstream/main && git push origin main`，
 然后把 `opb/*` 分支跟上 `main`，并重跑下文的检查。

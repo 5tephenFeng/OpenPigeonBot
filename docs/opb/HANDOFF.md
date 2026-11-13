@@ -2,7 +2,7 @@
 
 供中枢和 OPB 内的维护 Bot 接手。主机只用主机名（sts-mbp、sts-mac），不必写 machineId。不要在本文写入密钥或其它秘密。
 
-最后更新：2026-11-13（Asia/Shanghai）。本文是仓库外草稿，对应文档提交号待定。
+最后更新：2026-11-13（Asia/Shanghai）。文档位于 `opb/docs` 分支，首个提交 `311b3513a`（完整 SHA：`311b3513a3b7a45904183ba853e4f43869da3acf`）。
 
 ## 当前进度
 
@@ -10,12 +10,12 @@
 - 品牌化在 `opb/branding`（尖端 `0ec29a9fb0436cb1a8e76e43c1bff6834a1831e1`），相对 `main` 超前 6、落后 0。显示名、Bundle ID、安装包名已改；兼容性合同范围内的接口未改。任务 `TASK-20261112-task-6f02e47b`。2026-11-13 在 sts-mbp 只读核对：仓库位于 `/Users/stephen-feng/SyncthingSplit/AI/OpenPigeonBot`，当前分支 `opb/branding` 跟踪 `origin/opb/branding`，工作区干净；远程有 `origin`（本 fork）和 `upstream`（`milind-soni/OpenMausBot`）。
 - 已在 sts-mac 部署 0.1.154。任务 `TASK-20261113-task-f1028a6e`，DeviceManager 发布 `1d4a6a9`，操作记录 `OP-20261113-result-4fadc16bac81`。应用路径为 `/Applications/OpenPigeonBot.app`（`CFBundleIdentifier`=`com.stephenfeng.openpigeonbot`，版本 0.1.154）。数据目录 `~/.openmausbot`。当前监听 `127.0.0.1:8799` / `127.0.0.1:8800`（进程 OpenPigeonBot，pid 41342，核对于 2026-11-13 11:44 Asia/Shanghai）；8810 / 8811 未监听。`/api/health` 正文见部署文档，`app` 为 `openmausbot`。`/api/brand` 为 `source: "default"`，`brand.name` 为 `OpenMausBot`。构建使用 `-c.mac.identity=null`；暂存副本上 `codesign --deep --force --sign -` 之后，已安装包的 Identifier 已是 `com.stephenfeng.openpigeonbot`（`Signature=adhoc`，`TeamIdentifier=not set`），不再是 `Electron`。当前应用包没有 `com.apple.quarantine`，仅有 `com.apple.provenance`。开机自启、主机控制、FDA 未做（用户与系统 LaunchAgents 中无 OPB 相关项）。引擎登录和实际对话未验证。签名修正方案已写成设计稿，尚未实施。
 - Move from Grok Bot **已在当前 `opb/branding` 树中**，不必先合并上游 338 个积压提交才能试用。
-- 正在补齐 OPB 文档（本草稿，含源码核实和 2026-11-13 现场只读核对）。尚未提交到 GitHub。
+- 已在 `opb/docs` 写入文档（首个提交 `311b3513a`），含源码核实和 2026-11-13 现场只读核对。
 
 ## 进行中的分支
 
 - `opb/branding`：已推送的品牌化分支，尖端 `0ec29a9fb`。
-- `opb/docs`：计划用来提交本次文档补齐。起草时该分支在远程尚不存在，不要假定已经建好。
+- `opb/docs`：本次文档补齐分支，从 `opb/branding`（`0ec29a9fb`）切出，首个提交 `311b3513a`。不要合并进 `main`。
 
 不要在 `main` 上直接提交 OPB 改动。
 
@@ -30,7 +30,7 @@
 - 助手迁移：先用一个不重要的助手试导入。手动入口是 Settings → Import → Move from Grok Bot（未被品牌常量隐藏）。自动提示（`GROK_MOVE_NOTICE`）在 `brandStatus().source === "file"`、Team Cloud、托管成员或组织桌面时不会出现；当前默认 `source: "default"`，按代码仍可能弹出。导入完成后：先在原 Grok Bot 中关闭定时 Routine，再在 OPB 中启用对应 Routine；事件触发类从该 bot 的 `memory/grok-bot-event-routines.md` 核对并重绑。不要一次迁入全部「中枢、拾遗、生活」等助手。
 - 排查仍直接读取 `brand().name` 做界面展示的调用点（`productName()` 在 `source !== "file"` 时已保持 PigeonBot，但 `applyBrand()` 会把 `brand().name` 换成服务端的 OpenMausBot）。
 - 补改 `electron/system-tray.mjs` 里仍为 `"OpenMaus Bot"` 的托盘 tooltip（品牌化漏改）。
-- 文档入库：用户确认后，经 DeviceManager 在约定分支（计划为 `opb/docs`）提交并推送，不要直接写 `main`。
+- 文档已在 `opb/docs` 提交（首个提交 `311b3513a`）；推送后把 GitHub 链接补进交接。不要直接写 `main`。
 
 ## 待用户决定
 
@@ -58,7 +58,7 @@
 - 按签名方案稿，在 sts-mbp 上把构建改为 `-c.mac.identity="-"`，确认 entitlements 仍含 `disable-library-validation` 和 `allow-jit`，用 `codesign -dv` 验收 Identifier；不要再 `codesign --deep`。去隔离用 `xattr`。先完成签名验收，再考虑授 FDA / 辅助功能。
 - 在 sts-mac 上验证引擎登录和实际对话（需用户配合的步骤不要擅自做）。替换已装版本须先得到用户同意。
 - 端口已在 2026-11-13 11:44（Asia/Shanghai）实测：8799 / 8800 在听，8810 / 8811 未听。若之后进程重启，以当时 `lsof` 为准。
-- 文档入库：用户确认本批草稿后，经 DeviceManager 推到约定分支（计划为 `opb/docs`）。
+- 文档已在 `opb/docs` 提交（首个提交 `311b3513a`），由本任务推送到 `origin/opb/docs`。不要合并进 `main`。
 
 ### P1
 
